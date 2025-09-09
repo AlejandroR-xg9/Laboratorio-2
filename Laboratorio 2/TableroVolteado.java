@@ -9,19 +9,20 @@ public class TableroVolteado {
     private String Vacío = "[ ]";
         private int cursorX = 0;
         private int cursorY = 0;
-        // Para guardar las dos selecciones
+        // Para guardar las dos selecciones wow
         private int sel1X = -1, sel1Y = -1;
         private int sel2X = -1, sel2Y = -1;
-        private boolean esperandoComparacion = false;
+
 
     public TableroVolteado() {
         tablero[cursorX][cursorY] = Cursor;
     }
 
     public void mover(String direccion, Tablero tableroOriginal){
-        tablero[cursorX][cursorY] = Vacío;
-        String dir = direccion.toUpperCase();
+        if(tablero[cursorX][cursorY] == Cursor){
             tablero[cursorX][cursorY] = Vacío;
+        }
+        String dir = direccion.toUpperCase();
             switch (dir) {
                 case "W":
                     if (cursorX > 0) cursorX--;
@@ -45,22 +46,27 @@ public class TableroVolteado {
         }
 
 
-        private void seleccionar(Tablero tableroOriginal) {
-            if (sel1X == -1 && sel1Y == -1) {
-                // Primera selección
-                sel1X = cursorX;
-                sel1Y = cursorY;
-                tablero[cursorX][cursorY] = tableroOriginal.getTablero()[cursorX][cursorY];
-            } else if ((sel1X != cursorX || sel1Y != cursorY) && sel2X == -1 && sel2Y == -1) {
-                // Segunda selección
-                sel2X = cursorX;
-                sel2Y = cursorY;
-                tablero[cursorX][cursorY] = tableroOriginal.getTablero()[cursorX][cursorY];
-                esperandoComparacion = true;
-            }
+    private void seleccionar(Tablero tableroOriginal) {
+        // Validar que el cursor esté dentro de los límites
+        if (cursorX < 0 || cursorX >= tablero.length || cursorY < 0 || cursorY >= tablero[0].length) return;
+        if (sel1X == -1 && sel1Y == -1) {
+            // Primera selección
+            sel1X = cursorX;
+            sel1Y = cursorY;
+            tablero[cursorX][cursorY] = tableroOriginal.getTablero()[cursorX][cursorY];
+        } else if ((sel1X != cursorX || sel1Y != cursorY) && sel2X == -1 && sel2Y == -1) {
+            // Segunda selección
+            sel2X = cursorX;
+            sel2Y = cursorY;
+            tablero[cursorX][cursorY] = tableroOriginal.getTablero()[cursorX][cursorY];
         }
+        if (sel1X != -1 && sel1Y != -1 && sel2X != -1 && sel2Y != -1) {
+            comparar(tableroOriginal);
+            return;
+        }
+    }
 
-    public void compararYResetear(Tablero tableroOriginal) {
+    public void comparar(Tablero tableroOriginal) {
         String v1 = tableroOriginal.getTablero()[sel1X][sel1Y];
         String v2 = tableroOriginal.getTablero()[sel2X][sel2Y];
         if (!v1.equals(v2)) {
@@ -70,11 +76,6 @@ public class TableroVolteado {
         }
         // Resetear selección
         sel1X = sel1Y = sel2X = sel2Y = -1;
-        esperandoComparacion = false;
-    }
-
-    public boolean estaEsperandoComparacion() {
-        return esperandoComparacion;
     }
 
     public String[][] getTablero() {

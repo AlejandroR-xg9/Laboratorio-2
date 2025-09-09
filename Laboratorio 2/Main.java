@@ -3,10 +3,23 @@ public class Main {
     public static void main(String[] args) {
         Tablero tablero = new Tablero();
         TableroVolteado tableroVolteado = new TableroVolteado();
+        Jugadores jugador1 = new Jugadores("Jugador 1");
+        Jugadores jugador2 = new Jugadores("Jugador 2");
         Scanner scanner = new Scanner(System.in);
+
 
         System.out.println("Juego de Memoria");
         tablero.sortearTablero();
+
+        jugador1.setPuntaje(0);
+        jugador2.setPuntaje(0);
+
+        System.out.println("Escribe tu nombre jugador 1:");
+        String nombre1 = scanner.nextLine();
+        jugador1 = new Jugadores(nombre1);
+        System.out.println("Escribe tu nombre jugador 2:");
+        String nombre2 = scanner.nextLine();
+        jugador2 = new Jugadores(nombre2);
 
         System.out.println("Tablero:");
         System.out.println(tableroVolteado.toString());
@@ -20,15 +33,11 @@ public class Main {
             }
             tableroVolteado.mover(input, tablero);
             System.out.println(tableroVolteado.toString());
-            // Si se seleccionaron dos celdas, pausar para mostrar el resultado
-            if (input.equalsIgnoreCase("E") && tableroVolteado.estaEsperandoComparacion()) {
-                System.out.println("Presiona Enter para continuar...");
-                scanner.nextLine();
-                tableroVolteado.compararYResetear(tablero);
+            // Solo comparar y resetear si ya hay dos seleccionadas
+            if (input.equalsIgnoreCase("E")) {
                 System.out.println(tableroVolteado.toString());
             }
         }
-
         scanner.close();
     }
 
